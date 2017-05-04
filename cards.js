@@ -163,10 +163,13 @@ function AllHoldings(ranks) {
 
 // Represents a standard deck (4 suits, 13 ranks)
 function Deck() {
-    this.ranks = standardRanks()
-    this.suits = standardSuits()
-    this.shapes = standardShapes(this.suits)
-    this.holdings = new AllHoldings(this.ranks)
+    this.ranks = standardRanks();
+    this.suits = standardSuits();
+    this.shapes = standardShapes(this.suits);
+    this.holdings = new AllHoldings(this.ranks);
+    this.h = function (text) {
+	return this.holdings.list.lookup(text)
+    }
 }
 
 function getArgs(func) {
