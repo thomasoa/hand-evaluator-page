@@ -160,22 +160,13 @@ function AllHoldings(ranks) {
     this.list=holdings;
 }
 
-// Represents a standard deck (4 suits, 13 ranks)
-function Deck() {
-    this.ranks = standardRanks();
-    this.suits = standardSuits();
-    this.shapes = standardShapes(this.suits);
-    this.holdings = new AllHoldings(this.ranks);
-    this.holding = function (text) {
-	return this.holdings.list.lookup(text);
-    }
-}
 
+// Lifted from https://davidwalsh.name/javascript-arguments
 function getArgs(func) {
     // First match everything inside the function argument parens.
     var args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
  
-// Split the arguments string into an array comma delimited.
+    // Split the arguments string into an array comma delimited.
     return args.split(',').map(function(arg) {
 	// Ensure no inline comments are parsed and trim the whitespace.
 	return arg.replace(/\/\*.*\*\//, '').trim();
@@ -201,13 +192,42 @@ function HoldingMapper(ranks,func) {
     this.argMapper = args.map(function(arg) { return holdingArgMap(ranks,arg)})
 
 
-    this.evaluate = function(h) {
-        console.log(h)
+    this.evalHolding = function(h) {
         mapped = this.argMapper.map(function(m) {
 		return h[m]
 	    })
-        console.log(mapped)
         return this.func.apply(null,mapped)
     }
 }
 
+// Represents a standard deck (4 suits, 13 ranks)
+function Deck() {
+    this.ranks = standardRanks();
+    this.suits = standardSuits();
+    this.shapes = standardShapes(this.suits);
+    this.holdings = new AllHoldings(this.ranks);
+    this.holdingProc = function(func) {
+	return new HoldingMapper(this.ranks,func);
+    };
+
+    this.h = function (hVal) {
+	var holding;
+	if (typeof(hVal)=='string') {
+	    holding = this.holdings.list.lookup(hVal.toUpperCase());
+	} else if (typeof(hVal)=='number') {
+	    holding = this.holdings.list.entry(hVal);
+	} else {
+	    holding = hVal;
+        }
+	    
+	if (holding == null) {
+	    throw "Invalid holding '" + text + "'";
+	}
+	return holding;
+    };
+}
+
+// Example:
+//    deck = new Deck()
+//    hcp = deck.holdingProc(function (A,K,Q,J) { return A*4+K*3+Q*2+J })
+//    hcp.holding(deck.h('AJT32'))
