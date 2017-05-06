@@ -5,3 +5,4 @@ Goals of this implementation:
 * Make it stand-alone, so a person can save the page and run it offline
 * Support CCCC first, along with the simpler evaluator (HCP, for example)
 * Implement other evaluators later.
+* Implement a version more suitable for mobile.
