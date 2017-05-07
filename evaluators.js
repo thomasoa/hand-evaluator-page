@@ -52,7 +52,7 @@ function CCCCQuality (len,A,K,Q,J,T, x9, x8) {
    return Quality
 }
 
-function CCCCHoldings(len,A,K,Q,J,T,x9,x8) {
+function CCCCHolding(len,A,K,Q,J,T,x9,x8) {
     HigherHonors=0;
     eval=0;
 
@@ -102,4 +102,8 @@ function CCCCHoldings(len,A,K,Q,J,T,x9,x8) {
     }
     eval += CCCCQuality(len,A,K,Q,J,T,x9,x8);
     return eval*1.0/100.0;
+}
+
+function HCPHolding(A,K,Q,J) {
+    return A*4+K*3+Q*2+J;
 }
