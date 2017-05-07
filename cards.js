@@ -1,5 +1,6 @@
-// Class representing a card rank
-function Rank(index,short) {
+Bridge = {}
+
+Bridge.Rank = function(index,short) {
     this.index = index;
     this.short = short;
     this.bit = 1<<index;
@@ -7,13 +8,20 @@ function Rank(index,short) {
 
 
 // Class representing a suit
-function Suit(index,short) {
+Bridge.Suit= function (index,short) {
     this.index = index;
     this.short = short;
 }
 
+suitSymbols = {
+    'S':'\U+2660',
+    'H':'\U+2665',
+    'D':'\U+2666',
+    'C': '\U+2663'
+};
+
 // Class representing a holding (a subset of ranks in a suit)
-function Holding(index,short,ranks) {
+Bridge.Holding= function (index,short,ranks) {
     this.index = index;
     this.short = short;
     this.display = short;
@@ -29,24 +37,24 @@ function Holding(index,short,ranks) {
 }
 
 // Class representing hand shape
-function Shape(index,lengths,suits) {
+Bridge.Shape = function(index,lengths,suits) {
     this.index = index;
     this.short = lengths.join("-");
     this.lengths = lengths;
-    localThis = this;
+    var localThis = this;
     suits.forEach( function(suit) {
 	    localThis[suit.short] = lengths[suit.index];
 	});
 }
 
-function builderFor(klass) {
+Bridge.builderFor = function(klass) {
     return function(index,short) {
        return new klass(index,short);
     }
 }
 
 // Useful for 
-function SmartListOf(builder) {
+Bridge.SmartListOf = function(builder) {
     this._byIndex = [];
     this._byShort = {};
     this._builder = builder;
@@ -58,8 +66,8 @@ function SmartListOf(builder) {
     }
 
     this.add = function(short,name) {
-        index = this._byIndex.length;
-        newItem = this._builder(index,short);
+        var index = this._byIndex.length;
+        var newItem = this._builder(index,short);
         this._byIndex.push(newItem);
         this._byShort[newItem.short] = newItem;
         return newItem;
@@ -94,8 +102,8 @@ function SmartListOf(builder) {
     };
 }
 
-function standardRanks() {
-    ranks = new SmartListOf(builderFor(Rank));
+Bridge.standardRanks = function() {
+    var ranks = new Bridge.SmartListOf(Bridge.builderFor(Bridge.Rank));
     ranks.add('2');
     ranks.add('3');
     ranks.add('4');
@@ -113,8 +121,8 @@ function standardRanks() {
     return ranks;
 }
         
-function standardSuits() {
-    suits = new SmartListOf(builderFor(Suit));
+Bridge.standardSuits = function() {
+    var suits = new Bridge.SmartListOf(Bridge.builderFor(Bridge.Suit));
     suits.add('S');
     suits.add('H');
     suits.add('D');
@@ -123,11 +131,11 @@ function standardSuits() {
     return suits;
 }
 
-function standardShapes(suits) {
+Bridge.standardShapes = function(suits) {
     shapeMaker = function(index,lengths) {
-	return new Shape(index,lengths,suits);
+	return new Bridge.Shape(index,lengths,suits);
     };
-    shapes = new SmartListOf(shapeMaker);
+    shapes = new Bridge.SmartListOf(shapeMaker);
    
     for (s=0;s<=13; s++) {
 	for (h=0;h+s<=13; h++) {
@@ -141,13 +149,13 @@ function standardShapes(suits) {
     return shapes;
 }
 
-function AllHoldings(ranks) {
+Bridge.AllHoldings = function(ranks) {
     this.ranks = ranks;
-    holdingMaker = function(index,short) {
-	return new Holding(index,short,ranks);
+    var holdingMaker = function(index,short) {
+	return new Bridge.Holding(index,short,ranks);
     };
-    holdings = new SmartListOf(holdingMaker);
-    voidH = holdings.add("");
+    var holdings = new Bridge.SmartListOf(holdingMaker);
+    var voidH = holdings.add("");
     voidH.display = "-";
     holdings.alias("-",voidH.short);
     ranks.forEach(function(topCard) {
@@ -162,7 +170,7 @@ function AllHoldings(ranks) {
 
 
 // Lifted from https://davidwalsh.name/javascript-arguments
-function getArgs(func) {
+Bridge.getArgs = function(func) {
     // First match everything inside the function argument parens.
     var args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
  
@@ -176,7 +184,7 @@ function getArgs(func) {
 	});
 }
 
-function holdingArgMap(ranks,arg) {
+Bridge.holdingArgMap = function(ranks,arg) {
     if (arg =='len') {
         return 'length'
     }
@@ -186,10 +194,10 @@ function holdingArgMap(ranks,arg) {
     return arg
 }
 
-function HoldingMapper(ranks,func) {
+Bridge.HoldingMapper = function(ranks,func) {
     this.func = func
-    args = getArgs(func)
-    this.argMapper = args.map(function(arg) { return holdingArgMap(ranks,arg)})
+    var args = Bridge.getArgs(func)
+    this.argMapper = args.map(function(arg) { return Bridge.holdingArgMap(ranks,arg)})
 
 
     this.evalHolding = function(h) {
@@ -201,13 +209,17 @@ function HoldingMapper(ranks,func) {
 }
 
 // Represents a standard deck (4 suits, 13 ranks)
-function Deck() {
-    this.ranks = standardRanks();
-    this.suits = standardSuits();
-    this.shapes = standardShapes(this.suits);
-    this.holdings = new AllHoldings(this.ranks);
-    this.holdingProc = function(func) {
-	return new HoldingMapper(this.ranks,func);
+Bridge.Deck = function() {
+    this.ranks = Bridge.standardRanks();
+    this.suits = Bridge.standardSuits();
+    this.shapes = Bridge.standardShapes(this.suits);
+    this.holdings = new Bridge.AllHoldings(this.ranks);
+    this.holdingProc = function(name,func) {
+	var mapper = new Bridge.HoldingMapper(this.ranks,func);
+	Bridge.Holding.prototype[name]=function () {
+            return mapper.evalHolding(this);
+	}
+        return mapper
     };
 
     this.h = function (hVal) {
@@ -228,6 +240,9 @@ function Deck() {
 }
 
 // Example:
-//    deck = new Deck()
-//    hcp = deck.holdingProc(function (A,K,Q,J) { return A*4+K*3+Q*2+J })
-//    hcp.holding(deck.h('AJT32'))
+//    deck = new Bridge.Deck()
+//    deck.holdingProc('hcp',function (A,K,Q,J) { return A*4+K*3+Q*2+J })
+//    deck.h('AJT32').hcp()
+//    --> 5
+//    deck.h('-').hcp()
+//    --> 0
