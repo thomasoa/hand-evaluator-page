@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Interactive Hand Evaluator</title>
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-2.1.3.min.js">
+</script>
+<script type="text/javascript" src="js/bridge.js"></script>
+<script type="text/javascript" src="js/evaluators.js"></script>
+<script type="text/javascript" src="js/app.model.js"></script>
+<script type='text/javascript'>
+$(document).ready(
+  function() {
+     var deck = new Bridge.Deck();
+     var handModel = new HandModel(deck);
+
+     var handleSubmit = function() {
+       holdings = handModel.holdings()
+       holdings.forEach(function (h) { console.log(h.display) } );
+     }
+
+     $('input.holding').bind("propertychange change click keyup input paste",
+       function(event) {
+         var $input = $(this);
+         suitLabel = $input.attr('name');
+         hString = $input.val();
+         // if the string ends with 1, treat it as ending with 10, except when
+         // exiting field, for purposes of validating entry inline
+         if (hString.slice(-1)=='1' && event.type !='change' && event.type!='propertychange') { 
+             hString = hString+'0';
+             appended = true;
+         } else {
+             appended = false;
+         }
+   
+         isValid = handModel.setHolding(suitLabel,hString);
+         if (!isValid) {
+           $input.addClass('invalid');
+         } else {
+           $input.removeClass('invalid');
+         } 
+         if (handModel.length == 13 && !appended) {
+           $('input[type="submit"]').removeAttr('disabled');
+         } else {
+           $('input[type="submit"]').attr('disabled','disabled');
+         }
+       }
+    );
+    $('#handentry').submit(
+      function(e) {
+        e.preventDefault();
+        handleSubmit();
+      }
+    );
+
+    $('input#clear').click(
+       function (e) {
+          handModel.clear()
+          $('input.holding').val('');
+       }
+    );
+  }
+);
+</script>
+<style>
+.invalid { background: #FFCCCC; }
+.invalid:focus { background: #FFDDDD; }
+.red { color: red ; }
+label { margin-right: 0.5em; }
+#handentrycontainer { float: left; width: 15em; margin: 1em; font-size: 16pt; }
+#evaluations td { text-align: right; }
+</style>
+<body>
+<h1>Interactive hand evaluator</h1>
+<div id='handentrycontainer'>
+<form id='handentry'>
+<div class='holding'><label for='S'>&spades;</label><input type='text' name='S' id='handS' class='holding'/></div>
+<div class='holding'><label for='H' class='red'>&hearts;</label><input type='text' name='H' id='handH' class='holding'/></div>
+<div class='holding'><label for='D' class='red'>&diams;</label><input type='text' name='D' id='handD' class='holding'/></div>
+<div class='holding'><label for='C'>&clubs;</label><input type='text' name='C' id='handC' class='holding'/></div>
+<input type='submit' name='evaluate' value='Evaluate' disabled='disabled'/>
+<input type='button' name='clear' id='clear' value='Clear' tabindex='-1'/>
+
+</form>
+</div>
+<div id='evaluationscontainer'>
+<table id='evaluations'>
+<thead>
+<tr><th>&nbsp;</th><th>&nbsp;</th><th>CCCC</th></tr>
+</thead>
+<tbody>
+<tr><td>&nbsp;</td><td>Total</td><td id='cccc-total'>&nbsp;</td></tr>
+<tr><td>&nbsp;</td><td id='shape'>4-4-3-2</td><td id='cccc-shape'>&nbsp;</td></tr>
+<tr><td>&spades;</td><td id='suit-S'>AJT5432</td><td>&nbsp;</tr>
+</tbody>
+</table>
+</body>
+
+
