@@ -1,3 +1,4 @@
+// Module of classes for use in bridge website building
 Bridge = {}
 
 Bridge.Rank = function(index,short) {
@@ -5,7 +6,6 @@ Bridge.Rank = function(index,short) {
     this.short = short;
     this.bit = 1<<index;
 }
-
 
 // Class representing a suit
 Bridge.Suit= function (index,short) {
@@ -21,19 +21,59 @@ suitSymbols = {
 };
 
 // Class representing a holding (a subset of ranks in a suit)
-Bridge.Holding= function (index,short,ranks) {
+Bridge.Holding= function (index,short,source) {
     this.index = index;
     this.short = short;
     this.display = short;
+    this.source = source;
     self = this;
-    ranks.forEach(function (rank) {
+    source.ranks.forEach(function (rank) {
 	    self[rank.short] =((rank.bit & self.index) != 0);
 	});
 
-    this.ranks = ranks.filter(function (rank) {
+    this.ranks = source.ranks.filter(function (rank) {
 	    return ((rank.bit & index) != 0);
 	}).reverse();
     this.length = this.ranks.length;
+    if (this.length>0) {
+        this.topCard = this.ranks[0];
+	this.bottomCard = this.ranks[this.length-1];
+    } else {
+        this.topCard = null;
+	this.bottomCard = null;
+    }
+
+    this.complement = function() {
+        return this.source.entry(8191&~(this.index));
+    }
+
+    this.addRank = function(rank) {
+        return this.source.entry(this.index | rank.bit);
+    }
+
+    this.removeRank = function(rank) {
+        return this.source.entry(this.index | rank.bit);
+    }
+
+    this.intersect=function (holding) {
+	return this.source.entry(this.index & holding.index);
+    }
+
+    this.union = function(holding) {
+	return this.source.entry(this.index | holding.index);
+    }
+
+    this.addSpots = function(noOfSpots) {
+        // Adds noOfSpots bottom ranks to holding if they are not in holding
+        // Returns new holding, or null if one of the bottom ranks is already
+        // in holding. 
+        spotHolding = this.source.entry((1<<noOfSpots)-1)
+        if (this.intersect(spotHolding).length==0) {
+            return this.union(spotHolding);
+        } else {
+	    return null;
+	}
+    }
 }
 
 // Class representing hand shape
@@ -55,8 +95,8 @@ Bridge.builderFor = function(klass) {
 
 // Useful for 
 Bridge.SmartListOf = function(builder) {
-    this._byIndex = [];
-    this._byShort = {};
+    var _byIndex = [];
+    var _byShort = {};
     this._builder = builder;
 
     this.close = function(message) {
@@ -66,39 +106,39 @@ Bridge.SmartListOf = function(builder) {
     }
 
     this.add = function(short,name) {
-        var index = this._byIndex.length;
+        var index = _byIndex.length;
         var newItem = this._builder(index,short);
-        this._byIndex.push(newItem);
-        this._byShort[newItem.short] = newItem;
+        _byIndex.push(newItem);
+        _byShort[newItem.short] = newItem;
         return newItem;
     };
 
     this.alias = function(aliasName,realName) {
-	this._byShort[aliasName]=this.lookup(realName);
+	_byShort[aliasName]=this.lookup(realName);
     };
 
     this.map = function(f) {
-        return this._byIndex.map(f);
+        return _byIndex.map(f);
     };
 
     this.forEach = function(f) {
-	return this._byIndex.forEach(f);
+	return _byIndex.forEach(f);
     };
 
     this.filter = function(f) {
-        return this._byIndex.filter(f);
+        return _byIndex.filter(f);
     };
 
     this.len = function() { 
-	return this._byIndex.length;
+	return _byIndex.length;
     };
 
     this.lookup = function(short) {
-        return this._byShort[short];
+        return _byShort[short];
     };
  
     this.entry = function(index) {
-	return this._byIndex[index];
+	return _byIndex[index];
     };
 }
 
@@ -150,22 +190,44 @@ Bridge.standardShapes = function(suits) {
 }
 
 Bridge.AllHoldings = function(ranks) {
-    this.ranks = ranks;
+    this.ranks = ranks
+    var self = this
     var holdingMaker = function(index,short) {
-	return new Bridge.Holding(index,short,ranks);
+	return new Bridge.Holding(index,short,self);
     };
     var holdings = new Bridge.SmartListOf(holdingMaker);
     var voidH = holdings.add("");
     voidH.display = "-";
     holdings.alias("-",voidH.short);
-    ranks.forEach(function(topCard) {
+    ranks.forEach(
+      function(topCard) {
         for (i=0;i<1<<topCard.index; i++) {
             h = holdings.entry(i);
             holdings.add(topCard.short + h.short);
         }
-	});
+      }
+    );
     holdings.close('No more holdings allowed');
     this.list=holdings;
+    this.entry = function(index) {
+        return this.list.entry(index);
+    }
+
+    var re = /^(A?K?Q?J?T?9?8?7?6?5?4?3?2?)(X*)$/i;
+    this.parse = function(hString) {
+        if (hString == '-') {
+            return this.list.lookup(hString);
+	}             
+
+        hString = hString.replace('10','T');
+        var parts = re.exec(hString);
+        if (parts==null) {
+            return null;
+	}
+        var base = this.list.lookup(parts[1].toUpperCase());
+        base = base.addSpots(parts[2].length)
+        return base;
+    }
 }
 
 
@@ -225,16 +287,13 @@ Bridge.Deck = function() {
     this.h = function (hVal) {
 	var holding;
 	if (typeof(hVal)=='string') {
-	    holding = this.holdings.list.lookup(hVal.toUpperCase());
+	    holding = this.holdings.parse(hVal);
 	} else if (typeof(hVal)=='number') {
-	    holding = this.holdings.list.entry(hVal);
+	    holding = this.holdings.entry(hVal);
 	} else {
 	    holding = hVal;
         }
 	    
-	if (holding == null) {
-	    throw "Invalid holding '" + text + "'";
-	}
 	return holding;
     };
 }
