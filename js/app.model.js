@@ -12,6 +12,14 @@ function HandModel(deck) {
        return _holdings
     }
  
+    this.urlHash = function() {
+        if (this.length==13) {
+   	    return _texts.join(",");
+	} else {
+	    return null;
+	}
+    }
+
     this.clear = function() {
 	_holdings = [voidH,voidH,voidH,voidH];
         this.length = 0;

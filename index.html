@@ -19,25 +19,6 @@ $(document).ready(
      var $tbody = $("table tbody")
      var $shapeRow = $tbody.find('tr.shape');
      var $totalRow = $tbody.find('tr.total');
-     var handleSubmit = function() {
-         holdings = handModel.holdings();
-         shape = handModel.shape();
-         $shapeRow.find('.key').text(shape.short);
-         total = shape.cccc();
-         $shapeRow.find('.cccc').text(total.toFixed(2));
-         deck.suits.forEach(
-             function (suit) {
-                 holding = holdings[suit.index];
-                 $suitRow = $($tbody.find('tr.suit' + suit.short));
-                 $suitRow.find('.holding').text(holding.display);
-                 value = holding.cccc();
-                 total += value;
-                 $suitRow.find('.cccc').text(value.toFixed(2));
-             }
-         );
-         $totalRow.find('.cccc').text(total.toFixed(2));
-         $('#evaluationscontainer').show();
-     }
 
      $('input.holding').bind("propertychange change click keyup input paste",
        function(event) {
@@ -72,6 +53,69 @@ $(document).ready(
          }
        }
     );
+     window.onpopstate = function(event) {
+         stateHash = handModel.urlHash()
+         if (stateHash==null) {
+             if (window.location.hash != '') {
+                 initializeHash();
+             }
+         } else if (window.location.hash != '#' + stateHash) {
+                 initializeHash();
+         }
+     }
+
+     var handleSubmit = function() {
+         
+         window.location.hash = handModel.urlHash()
+         holdings = handModel.holdings();
+         shape = handModel.shape();
+         $shapeRow.find('.key').text(shape.short);
+         total = shape.cccc();
+         $shapeRow.find('.cccc').text(total.toFixed(2));
+         deck.suits.forEach(
+             function (suit) {
+                 holding = holdings[suit.index];
+                 $suitRow = $($tbody.find('tr.suit' + suit.short));
+                 $suitRow.find('.holding').text(holding.display);
+                 value = holding.cccc();
+                 total += value;
+                 $suitRow.find('.cccc').text(value.toFixed(2));
+             }
+         );
+         $totalRow.find('.cccc').text(total.toFixed(2));
+         $('#evaluationscontainer').show();
+     }
+
+     var initializeHash=function() {
+         hash = window.location.hash
+         if (hash == '' || hash=='#' || hash==null) {
+            $('input#clear').click();
+         } else {
+            //console.log('Parse hash here: "'+hash + '"');
+            hStrings = hash.substring(1).split(',',4);
+            map = {'S':'','H':'','D':'','C':'' }
+            for (i=0; i<hStrings.length; i++) {
+                suit = deck.suits.entry(i).short;
+                map[suit] = hStrings[i];
+            }
+            $('input.holding').each(
+               function() {
+                   var $this = $(this);
+                   $this.val(map[$this.data('suit')]);
+                   $this.trigger('change');
+               }
+            );
+            if (handModel.length == 13) {
+                handleSubmit();
+            } else {
+               $('#evaluationscontainer').hide();
+            }
+
+         }
+     }
+
+     initializeHash();
+
     $('#handentry').submit(
       function(e) {
         e.preventDefault();
@@ -81,8 +125,10 @@ $(document).ready(
 
     $('input#clear').click(
        function (e) {
-          handModel.clear()
+          handModel.clear();
           $('input.holding').val('');
+          window.location.hash = '';
+          $('#evaluationscontainer').hide();
        }
     );
   }
@@ -152,6 +198,12 @@ td { text-align: right; }
 <li>Implement more evaluators.
 <li>Make back button cycle back through previous hands.
 <li>Update look.
+<li>Test in more browsers. (Current only tested in Chrome and Safari.)
+</ul>
+<p>Features:</p>
+<ul>
+<li>Pure JavaScript and HTML means you can download this page and run it offline.
+<li>Open source. Git repository: <a href='https://github.com/thomasoa/hand-evaluator-page'>https://github.com/thomasoa/hand-evaluator-page</a>
 </ul>
 </div>
 </tbody>
