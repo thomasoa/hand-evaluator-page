@@ -12,19 +12,44 @@
 <script type='text/javascript'>
 $(document).ready(
   function() {
-     var deck = new Bridge.Deck();
+     deck = new Bridge.Deck();
+     deck.holdingProc('cccc',CCCCHolding);
+     deck.shapeProc('cccc',CCCCShapePoints);
      var handModel = new HandModel(deck);
-
+     var $tbody = $("table tbody")
+     var $shapeRow = $tbody.find('tr.shape');
+     var $totalRow = $tbody.find('tr.total');
      var handleSubmit = function() {
-       holdings = handModel.holdings()
-       holdings.forEach(function (h) { console.log(h.display) } );
+         holdings = handModel.holdings();
+         shape = handModel.shape();
+         $shapeRow.find('.key').text(shape.short);
+         total = shape.cccc();
+         $shapeRow.find('.cccc').text(total.toFixed(2));
+         deck.suits.forEach(
+             function (suit) {
+                 holding = holdings[suit.index];
+                 $suitRow = $($tbody.find('tr.suit' + suit.short));
+                 $suitRow.find('.holding').text(holding.display);
+                 value = holding.cccc();
+                 total += value;
+                 $suitRow.find('.cccc').text(value.toFixed(2));
+             }
+         );
+         $totalRow.find('.cccc').text(total.toFixed(2));
+         $('#evaluationscontainer').show();
      }
 
      $('input.holding').bind("propertychange change click keyup input paste",
        function(event) {
          var $input = $(this);
-         suitLabel = $input.attr('name');
-         hString = $input.val();
+         var $form = $(this.form)
+         suitLabel = $input.data('suit');
+         hString = $input.val().toUpperCase();
+         if (hString != $input.val()) {
+             $input.val(hString);
+         }
+          
+
          // if the string ends with 1, treat it as ending with 10, except when
          // exiting field, for purposes of validating entry inline
          if (hString.slice(-1)=='1' && event.type !='change' && event.type!='propertychange') { 
@@ -41,9 +66,9 @@ $(document).ready(
            $input.removeClass('invalid');
          } 
          if (handModel.length == 13 && !appended) {
-           $('input[type="submit"]').removeAttr('disabled');
+           $form.find('input[type="submit"]').removeAttr('disabled');
          } else {
-           $('input[type="submit"]').attr('disabled','disabled');
+           $form.find('input[type="submit"]').attr('disabled','disabled');
          }
        }
     );
@@ -69,17 +94,21 @@ $(document).ready(
 .red { color: red ; }
 label { margin-right: 0.5em; }
 #handentrycontainer { float: left; width: 15em; margin: 1em; font-size: 16pt; }
-#evaluations td { text-align: right; }
+#handentrycontainer input[type=text] { height: 16pt; font-size: 14pt; }
+#handentrycontainer .holding { padding-bottom: 4px; }
+#evaluationscontainer {  font-size: 14pt; display: none;}
+td { text-align: right; }
+.notes { clear: left; }
 </style>
 <body>
 <h1>Interactive hand evaluator</h1>
 <div id='handentrycontainer'>
 <form id='handentry'>
-<div class='holding'><label for='S'>&spades;</label><input type='text' name='S' id='handS' class='holding'/></div>
-<div class='holding'><label for='H' class='red'>&hearts;</label><input type='text' name='H' id='handH' class='holding'/></div>
-<div class='holding'><label for='D' class='red'>&diams;</label><input type='text' name='D' id='handD' class='holding'/></div>
-<div class='holding'><label for='C'>&clubs;</label><input type='text' name='C' id='handC' class='holding'/></div>
-<input type='submit' name='evaluate' value='Evaluate' disabled='disabled'/>
+<div class='holding'><label for='S'>&spades;</label><input type='text' data-suit='S' id='handS' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding'><label for='H' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding'><label for='D' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding'><label for='C'>&clubs;</label><input type='text' data-suit='C' id='handC' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<input type='submit' id='evaluate'value='Evaluate' disabled='disabled'/>
 <input type='button' name='clear' id='clear' value='Clear' tabindex='-1'/>
 
 </form>
@@ -87,14 +116,44 @@ label { margin-right: 0.5em; }
 <div id='evaluationscontainer'>
 <table id='evaluations'>
 <thead>
-<tr><th>&nbsp;</th><th>&nbsp;</th><th>CCCC</th></tr>
+<tr><th>&nbsp;</th><th>CCCC</th></tr>
 </thead>
 <tbody>
-<tr><td>&nbsp;</td><td>Total</td><td id='cccc-total'>&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td id='shape'>4-4-3-2</td><td id='cccc-shape'>&nbsp;</td></tr>
-<tr><td>&spades;</td><td id='suit-S'>AJT5432</td><td>&nbsp;</tr>
+<tr class='total'>
+    <td class='key'>Total</td>
+    <td class='cccc'>&nbsp;</td>
+</tr>
+<tr class='shape'>
+    <td class='key'>4-4-3-2</td>
+    <td class='cccc'>&nbsp;</td>
+</tr>
+<tr class='suitS'>
+    <td class='key'>&spades; <span class='holding'>AKQ</span></td>
+    <td class='cccc'>&nbsp;</td>
+</tr>
+<tr class='suitH'>
+    <td class='key'><span class='red'>&hearts;</span> <span class='holding'>JT9</span></td>
+    <td class='cccc'>&nbsp;</td>
+</tr>
+<tr class='suitD'>
+    <td class='key'><span class='red'>&diams;</span> <span class='holding'>876</span></td>
+    <td class='cccc'>&nbsp;</td>
+</tr>
+<tr class='suitC'>
+    <td class='key'>&clubs; <span class='holding'>5432</span></td>
+    <td class='cccc'>&nbsp;</td>
+</tr>
+</table>
+</div>
+<div class='notes'>
+<p>This is an early release of this application.</p>
+<p>To do:</p>
+<ul>
+<li>Implement more evaluators.
+<li>Make back button cycle back through previous hands.
+<li>Update look.
+</ul>
+</div>
 </tbody>
 </table>
 </body>
-
-

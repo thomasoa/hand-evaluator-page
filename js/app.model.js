@@ -21,6 +21,7 @@ function HandModel(deck) {
         var suit = this.deck.suits.lookup(suitString);
         hString = hString.toUpperCase();
         if (hString != _texts[suit.index]) {
+            _texts[suit.index] = hString;
             var oldHolding = _holdings[suit.index];
             var holding = this.deck.h(hString);
             if (holding == null) {
@@ -31,5 +32,11 @@ function HandModel(deck) {
 	}
 	return _holdings[suit.index].length>=0;
     } 
+
+    this.shape = function() {
+        //console.log(_holdings.map(function(h) { return h.length }));
+	key= _holdings.map(function(h) { return h.length });
+	return this.deck.shape(key);
+    }
 
 }
