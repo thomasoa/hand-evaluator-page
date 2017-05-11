@@ -3,7 +3,7 @@ function HCP (A, K, Q, J) {
 }
 
 function CCCCShapePoints(s,h,d,c) {
-    pts= 0
+    pts= 0;
     // Add one point per singleton, two per doubleton, three per void
     [s,h,d,c].forEach(function(l) {
 	    if (l<=2) { pts += 100*(3-l) }
