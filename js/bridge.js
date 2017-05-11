@@ -87,6 +87,7 @@ Bridge.Shape = function(index,lengths,suits) {
 	});
 }
 
+
 Bridge.builderFor = function(klass) {
     return function(index,short) {
        return new klass(index,short);
@@ -212,7 +213,6 @@ Bridge.AllHoldings = function(ranks) {
     this.entry = function(index) {
         return this.list.entry(index);
     }
-
     var re = /^(A?K?Q?J?T?9?8?7?6?5?4?3?2?)(X*)$/i;
     this.parse = function(hString) {
         if (hString == '-') {
@@ -220,13 +220,16 @@ Bridge.AllHoldings = function(ranks) {
 	}             
 
         hString = hString.replace('10','T');
+	hString = hString.replace(/ /g,'');
+        if (hString.length>13) {
+            return null;
+	}
         var parts = re.exec(hString);
         if (parts==null) {
             return null;
 	}
         var base = this.list.lookup(parts[1].toUpperCase());
-        base = base.addSpots(parts[2].length)
-        return base;
+	return base.addSpots(parts[2].length);
     }
 }
 
@@ -283,6 +286,16 @@ Bridge.Deck = function() {
 	}
         return mapper
     };
+    this.shapeProc = function(name,func) {
+        Bridge.Shape.prototype[name] = function() {
+            return func.apply(null,this.lengths);
+        }
+    };
+
+    this.shape = function(lengths) {
+        key = lengths.join("-");
+        return this.shapes.lookup(key);
+    }
 
     this.h = function (hVal) {
 	var holding;
@@ -296,7 +309,7 @@ Bridge.Deck = function() {
 	    
 	return holding;
     };
-}
+};
 
 // Example:
 //    deck = new Bridge.Deck()
@@ -305,3 +318,4 @@ Bridge.Deck = function() {
 //    --> 5
 //    deck.h('-').hcp()
 //    --> 0
+
