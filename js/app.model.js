@@ -22,10 +22,12 @@ function HandModel(deck) {
 
     this.clear = function() {
 	_holdings = [voidH,voidH,voidH,voidH];
+        _texts = ['','','',''];
         this.length = 0;
     }
        
     this.setHolding=function(suitString,hString) {
+        //console.log('setting holding: ' + suitString + ' ' + hString)
         var suit = this.deck.suits.lookup(suitString);
         hString = hString.toUpperCase();
         if (hString != _texts[suit.index]) {
