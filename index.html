@@ -12,6 +12,7 @@
 <script type='text/javascript'>
 $(document).ready(
   function() {
+     console.log('ready');
      deck = new Bridge.Deck();
      deck.holdingProc('cccc',CCCCHolding);
      deck.shapeProc('cccc',CCCCShapePoints);
@@ -19,6 +20,11 @@ $(document).ready(
      var $tbody = $("table tbody")
      var $shapeRow = $tbody.find('tr.shape');
      var $totalRow = $tbody.find('tr.total');
+    var clear = function(e) {
+          handModel.clear();
+          $('input.holding').val('');
+          $('#evaluationscontainer').hide();
+    };
 
      $('input.holding').bind("propertychange change click keyup input paste",
        function(event) {
@@ -30,7 +36,6 @@ $(document).ready(
              $input.val(hString);
          }
           
-
          // if the string ends with 1, treat it as ending with 10, except when
          // exiting field, for purposes of validating entry inline
          if (hString.slice(-1)=='1' && event.type !='change' && event.type!='propertychange') { 
@@ -64,8 +69,8 @@ $(document).ready(
          }
      }
 
+     this.handModel = function() { return handModel; }
      var handleSubmit = function() {
-         
          window.location.hash = handModel.urlHash()
          holdings = handModel.holdings();
          shape = handModel.shape();
@@ -88,10 +93,8 @@ $(document).ready(
 
      var initializeHash=function() {
          hash = window.location.hash
-         if (hash == '' || hash=='#' || hash==null) {
-            $('input#clear').click();
-         } else {
-            //console.log('Parse hash here: "'+hash + '"');
+         clear();
+         if (hash != '' && hash!='#' || hash!=null) {
             hStrings = hash.substring(1).split(',',4);
             map = {'S':'','H':'','D':'','C':'' }
             for (i=0; i<hStrings.length; i++) {
@@ -99,10 +102,10 @@ $(document).ready(
                 map[suit] = hStrings[i];
             }
             $('input.holding').each(
-               function() {
-                   var $this = $(this);
-                   $this.val(map[$this.data('suit')]);
-                   $this.trigger('change');
+               function(index,entry) {
+                   var $entry = $(entry);
+                   $entry.val(map[$entry.data('suit')]);
+                   $entry.triggerHandler('change');
                }
             );
             if (handModel.length == 13) {
@@ -113,6 +116,7 @@ $(document).ready(
 
          }
      }
+
 
      initializeHash();
 
@@ -125,10 +129,8 @@ $(document).ready(
 
     $('input#clear').click(
        function (e) {
-          handModel.clear();
-          $('input.holding').val('');
+          clear();
           window.location.hash = '';
-          $('#evaluationscontainer').hide();
        }
     );
   }
