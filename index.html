@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name='og:image' content='/graphics/falling_small.jpg'>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Interactive Hand Evaluator</title>
 <script type="text/javascript"
@@ -20,7 +21,7 @@ $(document).ready(
      var $tbody = $("table tbody")
      var $shapeRow = $tbody.find('tr.shape');
      var $totalRow = $tbody.find('tr.total');
-    var clear = function(e) {
+    var clearModel = function(e) {
           handModel.clear();
           $('input.holding').val('');
           $('#evaluationscontainer').hide();
@@ -93,7 +94,7 @@ $(document).ready(
 
      var initializeHash=function() {
          hash = window.location.hash
-         clear();
+         clearModel();
          if (hash != '' && hash!='#' || hash!=null) {
             hStrings = hash.substring(1).split(',',4);
             map = {'S':'','H':'','D':'','C':'' }
@@ -149,9 +150,11 @@ td { text-align: right; }
 .notes { clear: left; }
 </style>
 <body>
+<div>View <a href='../valuations/'>Hand Evaluation Articles</a></div>
 <h1>Interactive hand evaluator</h1>
 <div id='handentrycontainer'>
 <form id='handentry'>
+<div>Enter your hand:</div>
 <div class='holding'><label for='S'>&spades;</label><input type='text' data-suit='S' id='handS' class='holding' autocomplete='off' autocapitalize='characters'/></div>
 <div class='holding'><label for='H' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
 <div class='holding'><label for='D' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
@@ -199,7 +202,7 @@ td { text-align: right; }
 <ul>
 <li>Implement more evaluators.
 <li>Update look.
-<li>Test in more browsers. (Current only tested in Chrome and Safari.)
+<li>Test in more browsers. (Current only tested in Chrome and Safari. It likely won't work except on 'modern' browsers.)
 </ul>
 <p>Features:</p>
 <ul>
