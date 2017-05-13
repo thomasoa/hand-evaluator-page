@@ -14,10 +14,15 @@ $(document).ready(
         }
     );
 
+    var focusSpades = function() {
+	$('input.holding#spades').focus();
+    }
+
     var clearModel = function(e) {
           handModel.clear();
           $('input.holding').val('');
           $('#evaluationscontainer').hide();
+	  focusSpades();
     };
 
      $('input.holding').bind("propertychange change click keyup input paste",
@@ -173,6 +178,7 @@ $(document).ready(
       }
     );
     $('.notes h4#defaultSection').click();
+    focusSpades();
   }              
 );
 
