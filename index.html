@@ -8,7 +8,7 @@
 <meta name='og:url' content='http://bridge.thomasoandrews.com/evaluator/'/>
 <link rel="image_src" href='/graphics/falling_small.jpg'>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Interactive Bridge Hand Evaluator</title>
+<title>Interactive Bridge Hand Evaluator (BETA)</title>
 <script type="text/javascript"
         src="http://code.jquery.com/jquery-2.1.3.min.js">
 </script>
@@ -84,6 +84,9 @@ $(document).ready(
 
      this.model = function() { return model; }
      var handleSubmit = function() {
+         var container = $('#evaluationscontainer');
+         container.hide(250);
+         
          window.location.hash = handModel.urlHash()
          var shape = handModel.shape();
          $shapeRow.find('.key').text(shape.short);
@@ -117,8 +120,9 @@ $(document).ready(
                 );
             }
          );
-         $('#evaluationscontainer').hide(250);
-         $('#evaluationscontainer').show(250);
+                
+         container.finish();
+         container.show('fast');
      }
 
      var initializeHash=function() {
@@ -173,7 +177,7 @@ $(document).ready(
 .na:hover { color: #006600; }
 .na { color: #DDDDDD; font-size: 70%;}
 th { width: 4em; }
-th.key { width: 8em; }
+th.key { width: 9em; }
 label { margin-right: 0.5em; }
 #handentrycontainer { float: left; width: 12em; margin: 1em; font-size: 16pt; }
 #handentrycontainer input[type=text] { height: 16pt; font-size: 14pt; }
@@ -188,7 +192,7 @@ tr.suitS td, tr.suitC td { background-color: #EEEEEE; }
 </style>
 <body>
 <div>View <a href='../valuations/'>Hand Evaluation Articles</a></div>
-<h2>Interactive hand evaluator</h2>
+<h2>Interactive hand evaluator (BETA)</h2>
 <div id='handentrycontainer'>
 <form id='handentry'>
 <div>Enter your hand:</div>
@@ -260,7 +264,7 @@ tr.suitS td, tr.suitC td { background-color: #EEEEEE; }
 </div>
 <div class='notes'>
 <p><a href='#AQJ5,T64,AJ964,7'>Example</a></p>
-<p>This is an early release of this application.</p>
+<p>This is an early release of this application. A previous version of this application existed, but it was incompatible with my website provider's new platform.</p>
 <p>To do:</p>
 <ul>
 <li>Implement more evaluators (specifically, "Binky.")
@@ -272,7 +276,7 @@ tr.suitS td, tr.suitC td { background-color: #EEEEEE; }
 <p>Features:</p>
 <ul>
 <li>Pure JavaScript and HTML means you can download this page and run it offline.
-<li>Back button lets
+<li>Back and forward browser buttons work to run through the history of usage.
 <li>Open source. Git repository: <a href='https://github.com/thomasoa/hand-evaluator-page'>https://github.com/thomasoa/hand-evaluator-page</a>
 <li>You can log bugs on the 
 <a href='https://github.com/thomasoa/hand-evaluator-page/issues/new'>GitHub issues page,</a>
