@@ -26,6 +26,7 @@ Bridge.Holding= function (index,short,source) {
     this.short = short;
     this.display = short;
     this.source = source;
+    this.cache = {}
     self = this;
     source.ranks.forEach(function (rank) {
 	    self[rank.short] =((rank.bit & self.index) != 0);
@@ -264,7 +265,6 @@ Bridge.HoldingMapper = function(ranks,func) {
     var args = Bridge.getArgs(func)
     this.argMapper = args.map(function(arg) { return Bridge.holdingArgMap(ranks,arg)})
 
-
     this.evalHolding = function(h) {
         mapped = this.argMapper.map(function(m) {
 		return h[m]
@@ -282,7 +282,10 @@ Bridge.Deck = function() {
     this.holdingProc = function(name,func) {
 	var mapper = new Bridge.HoldingMapper(this.ranks,func);
 	Bridge.Holding.prototype[name]=function () {
-            return mapper.evalHolding(this);
+	    if (!(name in this.cache)) {
+		this.cache[name] = mapper.evalHolding(this);
+            }
+            return this.cache[name];
 	}
         return mapper
     };

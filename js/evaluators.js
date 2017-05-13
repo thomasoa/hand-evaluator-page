@@ -2,6 +2,14 @@ function HCP (A, K, Q, J) {
    return A*4+K*3+Q*2+J
 }
 
+function Fifths(A, K, Q, J, T) {
+    return A*4.0+K*2.8+Q*1.8+J+T*0.4;
+}
+
+function BUMRAP(A,K,Q,J,T) {
+    return A*4.5+K*3.0+Q*1.5+J*0.75+T*0.25;
+}
+
 function CCCCShapePoints(s,h,d,c) {
     pts= 0;
     // Add one point per singleton, two per doubleton, three per void
@@ -106,4 +114,24 @@ function CCCCHolding(len,A,K,Q,J,T,x9,x8) {
 
 function HCPHolding(A,K,Q,J) {
     return A*4+K*3+Q*2+J;
+}
+
+function Bissell(A,K,Q,J,T,len) {
+    var pts=0;
+    var honors=A+K+Q+J+T;
+    if (len>3 && honors<4) { pts += 1 }
+    var min;
+    if (honors>4) { min = honors } else { min = 4 }
+    if (len>min) { pts += 3*(len-min); }
+    var higher = 0;
+    var base = 3;
+    [A,K,Q,J,T].forEach(
+	function(card) {
+            value = card*(base+higher);
+            if (value>0) { pts += value; }
+            higher += card;
+            base -= 1;
+        }
+    );
+    return pts;
 }

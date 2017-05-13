@@ -8,8 +8,16 @@ function HandModel(deck) {
     var _holdings = [voidH,voidH,voidH,voidH];
     var _texts = ["","","",""];
     this.length = 0;
+
+    this.suits = function() {
+        return this.deck.suits;
+    }
     this.holdings = function() {
-       return _holdings
+        return _holdings;
+    }
+
+    this.holding = function(suit) {
+        return _holdings[suit.index]
     }
  
     this.urlHash = function() {
@@ -49,4 +57,77 @@ function HandModel(deck) {
 	return this.deck.shape(key);
     }
 
+    this.isComplete = function() {
+        return this.length == 13
+    }
+
+}
+
+function Evaluator(name,options) {
+    this.name = name;
+    this.options = Object.assign({
+	    displayName: name,
+            selectName: name,
+            digits: 0,
+            shapeMethod: name,
+            holdingMethod: name
+	},options);
+
+    this.evaluateOne=function(component,mName) {
+        var value;
+        if (this.name in component) {
+	    return component[mName]();
+        } else {
+	    return null;
+        }
+    }
+        
+    this.format = function(value) {
+	if (value==null) {
+	    return null;
+	} else {
+	    return value.toFixed(this.options.digits);
+	}
+    }
+
+    this.evaluate=function(handModel) {
+        var result = {name: this.name};
+        total = this.evaluateOne(handModel.shape(),this.options.shapeMethod);
+        result['shape']=this.format(total);
+        var self = this;
+        handModel.suits().forEach(
+	    function(suit) {
+		value=self.evaluateOne(handModel.holding(suit),self.options.holdingMethod);
+                total += value;
+		result[suit.short] = self.format(value);
+	    }
+	);
+        result['total']=this.format(total);
+	return result;
+    }
+}
+
+function AppModel() {
+    this.deck = new Bridge.Deck();
+    this.handModel = new HandModel(this.deck)
+    this.deck.holdingProc('cccc',CCCCHolding);
+    this.deck.shapeProc('cccc',CCCCShapePoints);
+    this.deck.holdingProc('hcp',HCP);
+    this.deck.holdingProc('fifths',Fifths);
+    this.deck.holdingProc('bumrap',BUMRAP);
+    this.deck.holdingProc('bissell',Bissell);
+    var _evaluators = [
+	new Evaluator('cccc',{digits: 2}),
+	new Evaluator('hcp',{}),
+	new Evaluator('fifths',{digits:1}),
+	new Evaluator('bumrap',{digits:2}),
+	new Evaluator('bissell',{})
+    ];
+
+    this.evaluate = function() {
+        var model=this.handModel;
+	return _evaluators.map(function(evaluator) {
+            return evaluator.evaluate(model);
+	    });
+    }
 }
