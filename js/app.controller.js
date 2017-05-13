@@ -149,5 +149,30 @@ $(document).ready(
           window.location.hash = '';
        }
     );
-  }
+    var currentOpenNote = null;
+    $('.notes h4').each(
+       function() {
+           var $this = $(this);
+           $this.data('section',$this.next('.section'));
+       }
+    );
+
+    $('.notes h4').click(function(e) {
+         var $this = $(this);
+	 if (currentOpenNote != null) {
+	     currentOpenNote.data('section').hide(0);
+             currentOpenNote.removeClass('selected');
+	     if (currentOpenNote.html() == $this.html()) {
+		 currentOpenNote = null;
+		 return;
+	     }
+         }
+	 currentOpenNote=$this;
+	 $this.addClass('selected');
+	 currentOpenNote.data('section').show(0);
+      }
+    );
+    $('.notes h4#defaultSection').click();
+  }              
 );
+
