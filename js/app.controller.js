@@ -154,6 +154,7 @@ $(document).ready(
           window.location.hash = '';
        }
     );
+
     var currentOpenNote = null;
     $('.notes h4').each(
        function() {
@@ -161,9 +162,36 @@ $(document).ready(
            $this.data('section',$this.next('.section'));
        }
     );
+ 
+    var myStorage;
+    if (typeof(Storage) !== "undefined") {
+        myStorage = window.localStorage;
+    } else {
+	myStorage = null;
+    }
+
+
+    var storeNotesTab = function(name) {
+        if (myStorage != null) {
+            myStorage.setItem('NoteSelected',name);
+        }
+    }
+
+    var getNotesTab = function() {
+        if (myStorage === null) {
+            return 'about';
+        }
+        value = myStorage.getItem('NoteSelected');
+        if (value=='undefined') {
+            return 'about';
+        } else {
+	    return value;
+	}
+    }
 
     $('.notes h4').click(function(e) {
          var $this = $(this);
+	 storeNotesTab($this[0].id);
 	 if (currentOpenNote != null) {
 	     currentOpenNote.data('section').hide(0);
              currentOpenNote.removeClass('selected');
@@ -177,7 +205,8 @@ $(document).ready(
 	 currentOpenNote.data('section').show(0);
       }
     );
-    $('.notes h4#defaultSection').click();
+    var tab = getNotesTab();
+    $('.notes h4#' +tab).click();
     focusSpades();
   }              
 );
