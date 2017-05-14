@@ -20,7 +20,7 @@
 }
 
 th { 
-     width: 4em;
+     width: 3.5em;
 }
 
 th.key { 
@@ -31,10 +31,16 @@ label {
     margin-right: 0.5em;
 }
 
+#topcontainer {
+    position: relative;
+    padding-bottom: 2em;
+}
+
 #handentrycontainer { 
-    float: left; 
+    position: relative;
+    top: 1em;
+    left: 1em;
     width: 12em; 
-    margin: 1em; 
     font-size: 16pt;
 }
 
@@ -47,14 +53,19 @@ label {
 #evaluationscontainer {  
     font-size: 12pt; 
     display: none;
+    position: absolute;
+    top: 10px;
+    left: 15em;
 }
 
-table {
+table#evaluations {
     border-collapse: collapse;
     border-bottom: 1px solid black;
 }
 
-table, td, th { 
+
+
+table#evaluations td, table#evaluations th { 
     text-align: right;
     border-right: 1px solid black;
     padding-right: 0.5em;
@@ -75,7 +86,6 @@ tr.suitS td, tr.suitC td {
 .notes { 
     line-height: 1.2em;
     width: 6in;
-    clear: left;
 }
 
 .notes {
@@ -89,6 +99,7 @@ tr.suitS td, tr.suitC td {
     padding-left: 20px;
     margin-bottom: 1px;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .notes h4.selected {
@@ -107,4 +118,5 @@ tr.suitS td, tr.suitC td {
     left: 120px;    
     display:none; 
     padding: 1em;
+    min-height: 12em;
 }
