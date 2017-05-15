@@ -19,6 +19,10 @@ function HandModel(deck) {
     this.holding = function(suit) {
         return _holdings[suit.index]
     }
+
+    this.text = function(suit) {
+	return _texts[suit.index];
+    }
  
     this.urlHash = function() {
         if (this.length==13) {
