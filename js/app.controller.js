@@ -18,13 +18,19 @@ $(document).ready(
 	$('input.holding#spades').focus();
     }
 
+    var submitButton =  $('form#handentry input[type="submit"]');
+
+    var disableSubmit= function(label) {
+	submitButton.attr('disabled','disabled');
+	submitButton.val(label);
+    };
+
     var clearModel = function(e) {
           handModel.clear();
           $('input.holding').val('');
           $('#evaluationscontainer').hide();
 	  focusSpades();
     };
-    var submitButton =  $('form#handentry input[type="submit"]')
 
     $('input.holding').bind("propertychange change click keyup input paste",
        function(event) {
@@ -57,13 +63,14 @@ $(document).ready(
 	     submitButton.removeAttr('disabled');
   
          } else {
-	     submitButton.attr('disabled','disabled');
-	     if (appended || handModel.length<0) {
-		 submitButton.val('Invalid');
+	     if (handModel.length<0) {
+		 disableSubmit('Invalid');
+	     } else if (appended) {
+                 disableSubmit('Incomplete 10');
 	     } else if (handModel.length==0) {
-		 submitButton.val('Evaluate');
+		 disableSubmit('Evaluate');
              } else {
-		 submitButton.val(handModel.length.toString() + " cards");
+		 disableSubmit(handModel.length.toString() + " cards");
 	     }
          }
        }
@@ -79,7 +86,6 @@ $(document).ready(
          }
      }
 
-     this.model = function() { return model; }
      var handleSubmit = function() {
          var container = $('#evaluationscontainer');
          container.hide(250);
@@ -89,9 +95,10 @@ $(document).ready(
          $shapeRow.find('.key').text(shape.short);
          handModel.suits().forEach(
              function (suit) {
-                 $suitRow[suit.short].find('.holding').text(handModel.holding(suit).display);
+                 $suitRow[suit.short].find('.holding').text(handModel.text(suit));
              }
          );
+
          var evaluations = model.evaluate();
          var toText = function(val) {
              if (val == null) {
