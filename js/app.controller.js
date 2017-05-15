@@ -28,7 +28,9 @@ $(document).ready(
     var clearModel = function(e) {
           handModel.clear();
           $('input.holding').val('');
+          $('input.holding').removeClass('invalid');
           $('#evaluationscontainer').hide();
+	  disableSubmit('Evaluate');
 	  focusSpades();
     };
 
@@ -181,30 +183,28 @@ $(document).ready(
     );
  
     var myStorage;
-    if (typeof(Storage) !== "undefined") {
+    if (false) { // typeof(Storage) !== "undefined") {
         myStorage = window.localStorage;
     } else {
-	myStorage = null;
+	myStorage = {
+            setItem: function(label,value) { },
+            getItem: function(label) { return null; }
+        }
     }
 
 
     var storeNotesTab = function(name) {
-        if (myStorage != null) {
-            myStorage.setItem('NoteSelected',name);
-        }
+	myStorage.setItem('NoteSelected',name);
     }
 
     var getNotesTab = function() {
-        if (myStorage === null) {
-            return 'about';
-        }
         value = myStorage.getItem('NoteSelected');
-        if (value=='undefined') {
+        if (typeof(value)=='undefined' || value==null) {
             return 'about';
         } else {
 	    return value;
 	}
-    }
+    };
 
     $('.notes h4').click(function(e) {
          var $this = $(this);
@@ -226,5 +226,5 @@ $(document).ready(
     $('.notes h4#' +tab).click();
     focusSpades();
   }              
-);
+    );
 
