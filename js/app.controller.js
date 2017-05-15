@@ -24,8 +24,9 @@ $(document).ready(
           $('#evaluationscontainer').hide();
 	  focusSpades();
     };
+    var submitButton =  $('form#handentry input[type="submit"]')
 
-     $('input.holding').bind("propertychange change click keyup input paste",
+    $('input.holding').bind("propertychange change click keyup input paste",
        function(event) {
          var $input = $(this);
          var $form = $(this.form)
@@ -52,9 +53,18 @@ $(document).ready(
          } 
 
          if (handModel.isComplete() && !appended) {
-           $form.find('input[type="submit"]').removeAttr('disabled');
+	     submitButton.val('Evaluate');           
+	     submitButton.removeAttr('disabled');
+  
          } else {
-           $form.find('input[type="submit"]').attr('disabled','disabled');
+	     submitButton.attr('disabled','disabled');
+	     if (appended || handModel.length<0) {
+		 submitButton.val('Invalid');
+	     } else if (handModel.length==0) {
+		 submitButton.val('Evaluate');
+             } else {
+		 submitButton.val(handModel.length.toString() + " cards");
+	     }
          }
        }
     );

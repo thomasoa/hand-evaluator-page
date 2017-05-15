@@ -321,4 +321,3 @@ Bridge.Deck = function() {
 //    --> 5
 //    deck.h('-').hcp()
 //    --> 0
-
