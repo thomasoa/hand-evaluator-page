@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html prefix="og:http://ogp.me/ns#">
+<html lang='en' prefix="og:http://ogp.me/ns#">
 <head>
 <meta name='og:image' content='http://bridge.thomasoandrews.com/graphics/falling_small.jpg'/>
 <meta name='og:title' content='Interactive Bridge Hand Evaluator'/>
@@ -25,10 +25,10 @@
 <div id='handentrycontainer'>
 <form id='handentry'>
 <div>Enter your hand:</div>
-<div class='holding'><label for='S'>&spades;</label><input type='text' id='spades' data-suit='S' id='handS' class='holding' autocomplete='off' autocapitalize='characters'/></div>
-<div class='holding'><label for='H' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
-<div class='holding'><label for='D' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
-<div class='holding'><label for='C'>&clubs;</label><input type='text' data-suit='C' id='handC' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding'><label for='handS'>&spades;</label><input type='text' data-suit='S' id='handS' class='holding' autocomplete='off' autocapitalize='characters' name='suitS'/></div>
+<div class='holding'><label for='handH' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding'><label for='handD' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding'><label for='handC'>&clubs;</label><input type='text' data-suit='C' id='handC' class='holding' autocomplete='off' autocapitalize='characters'/></div>
 <input type='submit' id='evaluate' value='Evaluate' disabled='disabled'>
 <input type='button' name='clear' id='clear' value='Clear' tabindex='-1'/>
 
