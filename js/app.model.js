@@ -69,13 +69,20 @@ function HandModel(deck) {
 
 function Evaluator(name,options) {
     this.name = name;
-    this.options = Object.assign({
-	    displayName: name,
-            selectName: name,
-            digits: 0,
-            shapeMethod: name,
-            holdingMethod: name
-	},options);
+    myOptions = {
+	displayName: name,
+	selectName: name,
+	digits: 0,
+	shapeMethod: name,
+	holdingMethod: name
+    };
+    Object.keys(options).forEach(
+	function(key) {
+	    myOptions[key]=options[key];
+	}
+    );
+    this.options = myOptions;
+
 
     this.evaluateOne=function(component,mName) {
         var value;
