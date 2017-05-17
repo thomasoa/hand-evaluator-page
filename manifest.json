@@ -1,0 +1,24 @@
+{
+  "short_name": "Hand Eval",
+  "name": "Bridge Hand Evaluator",
+  "display": "standalone",
+  "description": "An interactive bridge hand evaluator",
+  "icons": [
+    {
+      "src": "graphics/falling_small_216.jpg",
+      "type": "image/jpg",
+      "sizes": "216x216"
+    },
+    {
+      "src": "graphics/falling_small_192.jpg",
+      "type": "image/jpg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "graphics/falling_small_48.jpg",
+      "type": "image/jpg",
+      "sizes": "48x48"
+    }
+  ],
+  "start_url": "mobile.html"
+}
