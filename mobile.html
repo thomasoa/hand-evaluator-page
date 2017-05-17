@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang='en' prefix="og: http://ogp.me/ns#">
+<head>
+
+<meta charset="utf-8"/>
+<meta name='og:image' content='http://bridge.thomasoandrews.com/graphics/falling_small.jpg'/>
+<meta name='og:title' content='Interactive Bridge Hand Evaluator'/>
+<meta name='og:site_name' content='Thomas&#39;s Bridge Fantasia'/>
+<meta name='og:url' content='http://bridge.thomasoandrews.com/evaluator/mobile.html'/>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+<link rel='apple-touch-icon' 
+     href='graphics/falling_small.jpg'>
+<link rel="image_src" href='graphics/falling_small.jpg'>
+<title>Interactive Bridge Hand Evaluator (BETA)</title>
+<link rel="stylesheet" type="text/css" href='css/mobile.css?ver=3'/>
+<link rel="stylesheet"
+      href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-2.1.3.min.js">
+</script>
+<script type="text/javascript"
+        src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js">
+</script>
+<script type="text/javascript" src="js/bridge.js"></script>
+<script type="text/javascript" src="js/evaluators.js"></script>
+<script type="text/javascript" src="js/app.model.js"></script>
+<script type="text/javascript" src="js/app.mobile.js"></script>
+<body>
+<div data-role='page' id='handFormPage'>
+<div data-role='panel'  id='handForm'>
+<form id='handentry'>
+<div class='holding ui-field-contain'><label for='handS'>&spades;</label><input type='text' data-suit='S' id='handS' class='holding' autocomplete='off' autocapitalize='characters' name='suitS'/></div>
+<div class='holding ui-field-contain'><label for='handH' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding ui-field-contain'><label for='handD' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class='holding ui-field-contain'><label for='handC'>&clubs;</label><input type='text' data-suit='C' id='handC' class='holding' autocomplete='off' autocapitalize='characters'/></div>
+<div class="ui-field-contain">
+    <input type="submit" name="evaluate" value="Evaluate" disabled='disabled' />
+</div>
+
+<div class="ui-field-contain">
+    <input type='button' name='clear' id='clear' value='Clear' tabindex='-1'/>
+</div>
+</form>
+</div> <!-- end panel --> 
+
+<div data-role='header'><h1>Hand Evaluator</h1></div>
+<div data-role='content' id='evaluationsMain'>
+<div class='evaluationscontainer'>
+<table id='evaluations'>
+<thead>
+<tr><th class='key'>&nbsp;</th><th id='CCCC' class='value'>CCCC</th><th id='hcp' class='value'>HCP</th><th id='fifths' class='value'>Fifths</th><th id="bumrap" class='value'>BUM-RAP</th><th id="bissell" class='value'>Bissell</th></tr>
+</thead>
+<tbody>
+<tr class='total'>
+    <td class='key'>Total</td>
+    <td class='cccc'>&nbsp;</td>
+    <td class='hcp'>&nbsp;</td>
+    <td class='fifths'>&nbsp;</td>
+    <td class='bumrap'>&nbsp;</td>
+    <td class='bissell'>&nbsp;</td>
+</tr>
+<tr class='shape'>
+    <td class='key'>4-4-3-2</td>
+    <td class='cccc'>&nbsp;</td>
+    <td class='hcp'>&nbsp;</td>
+    <td class='fifths'>&nbsp;</td>
+    <td class='bumrap'>&nbsp;</td>
+    <td class='bissell'>&nbsp;</td>
+</tr>
+<tr class='suitS'>
+    <td class='key'>&spades; <span class='holding'>AKQ</span></td>
+    <td class='cccc'>&nbsp;</td>
+    <td class='hcp'>&nbsp;</td>
+    <td class='fifths'>&nbsp;</td>
+    <td class='bumrap'>&nbsp;</td>
+    <td class='bissell'>&nbsp;</td>
+</tr>
+<tr class='suitH'>
+    <td class='key'><span class='red'>&hearts;</span> <span class='holding'>JT9</span></td>
+    <td class='cccc'>&nbsp;</td>
+    <td class='hcp'>&nbsp;</td>
+    <td class='fifths'>&nbsp;</td>
+    <td class='bumrap'>&nbsp;</td>
+    <td class='bissell'>&nbsp;</td>
+</tr>
+<tr class='suitD'>
+    <td class='key'><span class='red'>&diams;</span> <span class='holding'>876</span></td>
+    <td class='cccc'>&nbsp;</td>
+    <td class='hcp'>&nbsp;</td>
+    <td class='fifths'>&nbsp;</td>
+    <td class='bumrap'>&nbsp;</td>
+    <td class='bissell'>&nbsp;</td>
+</tr>
+<tr class='suitC'>
+    <td class='key'>&clubs; <span class='holding'>5432</span></td>
+    <td class='cccc'>&nbsp;</td>
+    <td class='hcp'>&nbsp;</td>
+    <td class='fifths'>&nbsp;</td>
+    <td class='bumrap'>&nbsp;</td>
+    <td class='bissell'>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div> <!-- end evaluationscontainer--> 
+ <a href="#handForm" data-role="button">Enter another hand</a>
+
+</div><!-- end content -->
+</div><!-- end page -->
+<div data-role='page'>
+<div class='notes'>
+<h4 id='about'>About</h4>
+<div class='section'>
+<h5>Intro</h5>
+<p>This is an intereactive bridge hand evaluator.</p>
+<p>Enter your hand, click "evaluate," and it applies a number of evaluators to the hand.
+<h5>Why doesn't it always let me evaluate?</h5>
+<ul>
+<li>The button will usually tell you why it is disabled. Additionally, if any holding is invalid, that holding's field will be marked in red.
+<li>Because this is currently a work in progress, where the code is changing, you might have to do a full reload. Hold down the shift key and hit the reload button.
+</ul>
+</div>
+<h4 id='todo'>To Do</h4>
+<div class='section'>
+<ul>
+<li>Implement more evaluators (specifically, "Binky.")
+<li>Improve look-and-feel.
+<li>Test in more browsers. Currently only tested in Chrome, Firefox, and Safari. It likely 
+will work in most 'modern' browser.</li>
+<li>Possibly let user select evaluators.</li>
+<li>Create a separate mobile version.</li>
+</ul>
+</div>
+<h4 id='features'>Features</h4>
+<div class='section'>
+<dl>
+<dt>Pure JavaScript and HTML</dt>
+<dd>This means you can download this page and run it offline - no internet connection 
+required to use this page.
+<dt>Back and forward button</dt>
+<dd>The browser back and forward buttons allow you to navigate back to previously evaluated hands.</dd>
+<dt>Open source</dt>
+<dd>The source code is int the GitHub repository: <a target="_blank" href='https://github.com/thomasoa/hand-evaluator-page'>https://github.com/thomasoa/hand-evaluator-page</a>.</dd>
+</dl>
+</div>
+<h4 id='bugs'>Bugs and Requests</h4>
+<div class='section'>
+<p>What to do when you find bugs? Please let me know! Two methods:</p>
+<ul>
+<li>You can log bugs or request features on the 
+<a href='https://github.com/thomasoa/hand-evaluator-page/issues/new'>GitHub issues page,</a> or
+<li> Just email them to me at bridge&nbsp;AT&nbsp;thomasoandrews.com.
+</ul>
+</div>
+<h4 id='evaluators'>Evaluators</h4>
+<div class='section'>
+<dl>
+<dt>CCCC</dt>
+<dd>The Kaplan-and-Rubens evaluator.</dd>
+<dt>HCP</dt>
+<dd>The standard high card points sometimes called the Milton Work point count, where Ace=4, King=3, Queen=2, Jack=1.</dd>
+<dt><a href='http://bridge.thomasoandrews.com/valuations/cardvaluesfor3nt.html'>Fifths</a></dt>
+<dd>The Fifths evaluator is an evaluator which adjusts standard HCP slightly, removing one fifth from the value of kings and queens and adding two fifths for tens. It might or might not
+work better for determining whether to bid 3NT or not.</dd>
+<dt>BUM-RAP</dt>
+<dd>Alex Martelli's adjustment to work point count, which seems good for suit contracts. A=4.5, K=3, Q=1.5, J=0.75, T=0.25.</dd>
+<dt><a href='http://www.bridgeguys.com/Conventions/valuation/bissell_distributional_point_count.html'>Bissell</a></dt>
+<dd>Closely related to losing trick count, Bissell's evaluation dates from 1936. (If you subtract Bissell from 39 and divide by three, you get a rough losing trick count.)
+</dl>
+</div>
+</div>
+</div>
+</body>

@@ -1,0 +1,21 @@
+
+.red { 
+    color: red ;
+}
+
+.invalid { 
+    background: #FFCCCC; 
+}
+
+.invalid:focus { 
+    background: #FFDDDD;
+}
+
+table#evaluations td { 
+    text-align: right;
+}
+   
+.na {
+   font-size: 80%;
+   color: #999999;
+}
