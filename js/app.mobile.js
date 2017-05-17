@@ -34,7 +34,6 @@ $(document).ready(
           handModel.clear();
           $('input.holding').val('');
           $('input.holding').removeClass('invalid');
-          $('#evaluationscontainer').hide();
 	  disableSubmit('Evaluate');
 	  focusSpades();
     };
@@ -135,6 +134,7 @@ $(document).ready(
                 
          container.finish();
          container.show('fast');
+         jQuery.mobile.silentScroll(0);
      }
 
      var initializeHash=function() {
@@ -177,61 +177,11 @@ $(document).ready(
     $('input#clear').click(
        function (e) {
           clearModel();
-          window.location.hash = '';
        }
     );
 
-    var currentOpenNote = null;
-    $('.notes h4').each(
-       function() {
-           var $this = $(this);
-           $this.data('section',$this.next('.section'));
-       }
-    );
- 
-    var myStorage;
-    if (false) { // typeof(Storage) !== "undefined") {
-        myStorage = window.localStorage;
-    } else {
-	myStorage = {
-            setItem: function(label,value) { },
-            getItem: function(label) { return null; }
-        }
-    }
-
-
-    var storeNotesTab = function(name) {
-	myStorage.setItem('NoteSelected',name);
-    }
-
-    var getNotesTab = function() {
-        value = myStorage.getItem('NoteSelected');
-        if (typeof(value)=='undefined' || value==null) {
-            return 'about';
-        } else {
-	    return value;
-	}
-    };
-
-    $('.notes h4').click(function(e) {
-         var $this = $(this);
-	 storeNotesTab($this[0].id);
-	 if (currentOpenNote != null) {
-	     currentOpenNote.data('section').hide(0);
-             currentOpenNote.removeClass('selected');
-	     if (currentOpenNote.html() == $this.html()) {
-		 currentOpenNote = null;
-		 return;
-	     }
-         }
-	 currentOpenNote=$this;
-	 $this.addClass('selected');
-	 currentOpenNote.data('section').show(0);
-      }
-    );
-    var tab = getNotesTab();
-    $('.notes h4#' +tab).click();
     focusSpades();
-  }              
-    );
+  }
+);
+  
 
