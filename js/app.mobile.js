@@ -2,6 +2,7 @@ $(document).ready(
   function() {
     console.log('ready');
 
+    $('#evaluations-popup').popup({history: false});
     var model = new AppModel();
     var handModel = model.handModel;
     var $tbody = $("table#evaluations tbody")
@@ -80,42 +81,54 @@ $(document).ready(
          }
        }
     );
-     window.onpopstate = function(event) {
-         stateHash = handModel.urlHash()
-         if (stateHash==null) {
-             if (window.location.hash != '') {
-                 initializeHash();
-             }
-         } else if (window.location.hash != '#' + stateHash) {
-                 initializeHash();
-         }
-     }
-     var formPanel = $('#handForm');
+    
+    var pageHandHash = function() {
+        hash = window.location.hash;
+        if (hash==null) {
+            return hash;
+        }
+	return hash.split('&')[0]
+    }
 
-     var handleSubmit = function() {
-	 formPanel.panel('close');
-         var container = $('#evaluationscontainer');
-         container.hide(250);
-         
-         window.location.hash = handModel.urlHash()
-         var shape = handModel.shape();
-         $shapeRow.find('.key').text(shape.short);
-         handModel.suits().forEach(
-             function (suit) {
-                 $suitRow[suit.short].find('.holding').text(handModel.text(suit));
-             }
-         );
+    window.onpopstate = function(event) {
+        stateHash = handModel.urlHash()
+        pageHash = pageHandHash()
+	console.log(pageHash);
+        if (stateHash==null) {
+            if (pageHash != '') {
+                initializeHash();
+            }
+        } else if (pageHash != '#' + stateHash) {
+	    initializeHash();
+        }
+	return false;
+    }
+    var formPanel = $('#handForm');
 
-         var evaluations = model.evaluate();
-         var toText = function(val) {
-             if (val == null) {
-                 return "<span class='na'>n/a</span>";
-             } else {
-                 return val;
-             }
-         }
+    var handleSubmit = function() {
+	formPanel.panel('close');
+	var container = $('#evaluationscontainer');
+	container.hide(250);
+        
+	window.location.hash = handModel.urlHash()
+	var shape = handModel.shape();
+	$shapeRow.find('.key').text(shape.short);
+	handModel.suits().forEach(
+            function (suit) {
+		$suitRow[suit.short].find('.holding').text(handModel.text(suit));
+	    }
+        );
 
-         evaluations.forEach(
+        var evaluations = model.evaluate();
+        var toText = function(val) {
+            if (val == null) {
+                return "<span class='na'>n/a</span>";
+            } else {
+                return val;
+            }
+        }
+
+        evaluations.forEach(
             function (evaluation) {
                 var evalClass = '.' + evaluation['name'];
                 var update = function(row,value) {
@@ -138,7 +151,7 @@ $(document).ready(
      }
 
      var initializeHash=function() {
-         hash = window.location.hash;
+         hash = pageHandHash();
          clearModel();
          if (hash != '' && hash!='#' || hash!=null) {
             hStrings = hash.substring(1).split(',',4);

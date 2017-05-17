@@ -4,7 +4,7 @@
 
 <meta charset="utf-8"/>
 <meta name='og:image' content='http://bridge.thomasoandrews.com/graphics/falling_small.jpg'/>
-<meta name='og:title' content='Interactive Bridge Hand Evaluator'/>
+<meta name='og:title' content='Bridge Hand Evaluator'/>
 <meta name='og:site_name' content='Thomas&#39;s Bridge Fantasia'/>
 <meta name='og:url' content='http://bridge.thomasoandrews.com/evaluator/mobile.html'/>
 <meta name="viewport"
@@ -30,6 +30,7 @@
 <div data-role='page' id='handFormPage'>
 <div data-role='panel'  id='handForm'>
 <form id='handentry'>
+<div>Enter a hand:</div>
 <div class='holding ui-field-contain'><label for='handS'>&spades;</label><input type='text' data-suit='S' id='handS' class='holding' autocomplete='off' autocapitalize='characters' name='suitS'/></div>
 <div class='holding ui-field-contain'><label for='handH' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
 <div class='holding ui-field-contain'><label for='handD' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
@@ -44,12 +45,15 @@
 </form>
 </div> <!-- end panel --> 
 
-<div data-role='header'><h1>Hand Evaluator</h1></div>
+<div data-role='header'>
+<a href='http://bridge.thomasoandrews.com/valuations/' data-icon='home' rel='external'>Research</a> 
+<h1>Mobile Hand Evaluator</h1>
+</div>
 <div data-role='content' id='evaluationsMain'>
 <div id='evaluationscontainer'>
-<table id='evaluations'>
+<table data-role='table' data-mode='columntoggle' id='evaluations' class='ui-responsive' data-column-btn-text='Evaluators...'>
 <thead>
-<tr><th class='key'>&nbsp;</th><th id='CCCC' class='value'>CCCC</th><th id='hcp' class='value'>HCP</th><th id='fifths' class='value'>Fifths</th><th id="bumrap" class='value'>BUM-RAP</th><th id="bissell" class='value'>Bissell</th></tr>
+<tr><th class='key'>&nbsp;</th><th data-priority='1' id='CCCC' class='value'>CCCC</th><th data-priority='2' id='hcp' class='value'>HCP</th><th data-priority='3' id='fifths' class='value'>Fifths</th><th data-priority='4'id="bumrap" class='value'>BUM-RAP</th><th data-priority='5' id="bissell" class='value'>Bissell</th></tr>
 </thead>
 <tbody>
 <tr class='total'>
@@ -106,11 +110,12 @@
  <a href="#handForm" data-role="button">Enter another hand</a>
 
 </div><!-- end content -->
-<div class='notes'>
+<div class='notes' data-role='content'>
 <h4 id='about'>About</h4>
 <div class='section'>
 <h5>Intro</h5>
 <p>This is an intereactive bridge hand evaluator.</p>
+<p><a href='#AK873,Q1098,AT2,6' data-ajax='false'>Example</a></p>
 <p>Enter your hand, click "evaluate," and it applies a number of evaluators to the hand.
 <h5>Why doesn't it always let me evaluate?</h5>
 <ul>
@@ -123,10 +128,8 @@
 <ul>
 <li>Implement more evaluators (specifically, "Binky.")
 <li>Improve look-and-feel.
-<li>Test in more browsers. Currently only tested in Chrome, Firefox, and Safari. It likely 
-will work in most 'modern' browser.</li>
+<li>Test in more browsers. The only mobile device I have is iOS, so if you use an Android, let me know if it works.
 <li>Possibly let user select evaluators.</li>
-<li>Create a separate mobile version.</li>
 </ul>
 </div>
 <h4 id='features'>Features</h4>
