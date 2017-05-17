@@ -20,9 +20,14 @@ $(document).ready(
 
     var submitButton =  $('form#handentry input[type="submit"]');
 
+    var setButtonLabel = function(buttonElement,label) {
+	buttonElement.val(label)
+	buttonElement.button('refresh')
+    }
+
     var disableSubmit= function(label) {
 	submitButton.button('disable');
-	submitButton.val(label);
+	setButtonLabel(submitButton,label);
     };
 
     var clearModel = function(e) {
@@ -61,8 +66,8 @@ $(document).ready(
          } 
 
          if (handModel.isComplete() && !appended) {
-	     submitButton.val('Evaluate');           
-	     submitButton.button('enable')
+	     setButtonLabel(submitButton,'Evaluate');
+	     submitButton.button('enable');
          } else {
 	     if (handModel.length<0) {
 		 disableSubmit('Invalid');
@@ -154,7 +159,6 @@ $(document).ready(
 		return;
             } 
 	 }
-         console.log($('#handForm'))
 	 $('#handForm').panel('open');
 	 $('#evaluationscontainer').hide(500);
 
