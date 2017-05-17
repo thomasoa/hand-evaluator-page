@@ -46,7 +46,7 @@ $(document).ready(
           handModel.clear();
           $('input.holding').val('');
           $('input.holding').removeClass('invalid');
-	  disableSubmit('Evaluate');
+	  disableSubmit(null);
 	  focusSpades();
     };
 
