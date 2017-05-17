@@ -3,6 +3,7 @@ $(document).ready(
     console.log('ready');
 
     $('#evaluations-popup').popup({history: false});
+
     var model = new AppModel();
     var handModel = model.handModel;
     var $tbody = $("table#evaluations tbody")
@@ -26,9 +27,19 @@ $(document).ready(
 	buttonElement.button('refresh')
     }
 
+    var errorDiv = $('form#handentry .error');
+    var setErrorState = function(label) {
+	if (label == null) {
+	    errorDiv.hide(0);
+        } else {
+	    errorDiv.text(label);
+	    errorDiv.show(0);
+	}
+    }
+
     var disableSubmit= function(label) {
 	submitButton.button('disable');
-	setButtonLabel(submitButton,label);
+	setErrorState(label);
     };
 
     var clearModel = function(e) {
@@ -66,8 +77,8 @@ $(document).ready(
          } 
 
          if (handModel.isComplete() && !appended) {
-	     setButtonLabel(submitButton,'Evaluate');
 	     submitButton.button('enable');
+	     setErrorState(null);
          } else {
 	     if (handModel.length<0) {
 		 disableSubmit('Invalid');
