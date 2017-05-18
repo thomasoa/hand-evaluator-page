@@ -117,6 +117,7 @@ $(document).ready(
     var formPanel = $('#handForm');
 
     var handleSubmit = function() {
+	$( document.activeElement ).blur();
 	formPanel.panel('close');
 	var container = $('#evaluationscontainer');
 	container.hide(250);
