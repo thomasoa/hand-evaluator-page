@@ -93,18 +93,27 @@ $(document).ready(
        }
     );
     
-    var pageHandHash = function() {
-        hash = window.location.hash;
-        if (hash==null) {
-            return hash;
-        }
-	return hash.split('&')[0]
+    var popEventHash = function(event) {
+	if (!event.state) {
+	    return null;
+	}
+	return event.state.hash
+    }
+
+    var pageHandHash = function(hash) {
+	if (hash==null) {
+	    return null;
+	}
+	return hash.split('&')[0];
     }
 
     window.onpopstate = function(event) {
-        stateHash = handModel.urlHash()
-        pageHash = pageHandHash()
-	console.log(pageHash);
+	if (event.state!= null && event.state.hash=='#notesPage') {
+            return true;
+	}
+        $.mobile.changePage('#handFormPage',{changeHash: false});
+        stateHash = handModel.urlHash();
+        pageHash = pageHandHash(popEventHash(event));
         if (stateHash==null) {
             if (pageHash != '') {
                 initializeHash();
@@ -163,7 +172,7 @@ $(document).ready(
      }
 
      var initializeHash=function() {
-         hash = pageHandHash();
+         hash = pageHandHash(window.location.hash);
          clearModel();
          if (hash != '' && hash!='#' || hash!=null) {
             hStrings = hash.substring(1).split(',',4);
@@ -205,7 +214,9 @@ $(document).ready(
        }
     );
 
-    focusSpades();
+    if (window.location.hash!='#notesPage') {
+	focusSpades();
+    }
   }
 );
   
