@@ -129,6 +129,7 @@ $(document).ready(
 	$( document.activeElement ).blur();
 	formPanel.panel('close');
 	var container = $('#evaluationscontainer');
+	$('#blanksection').hide(0);
 	container.hide(250);
         
 	window.location.hash = handModel.urlHash()
@@ -195,6 +196,7 @@ $(document).ready(
 	 }
 	 $('#handForm').panel('open');
 	 $('#evaluationscontainer').hide(500);
+	 $('#blanksection').show(500);
 
      }
 
