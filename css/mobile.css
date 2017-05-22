@@ -28,6 +28,7 @@ tr.suitH td, tr.suitD td {
 tr.suitS td, tr.suitC td { 
     background-color: #EEEEEE;
 }   
+
 .na {
    font-size: 80%;
    color: #999999;
@@ -38,4 +39,5 @@ table#evaluations {
     border-bottom: 1px solid black;
 }
 
-form#handentry .error { font-size: 80%; }
+form#handentry .error { font-size: 70%; }
+
