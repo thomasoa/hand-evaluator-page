@@ -30,10 +30,9 @@ $(document).ready(
     var errorDiv = $('form#handentry .error');
     var setErrorState = function(label) {
 	if (label == null) {
-	    errorDiv.hide(0);
+	    errorDiv.text(' ');
         } else {
 	    errorDiv.text(label);
-	    errorDiv.show(0);
 	}
     }
 
@@ -85,7 +84,7 @@ $(document).ready(
 	     } else if (appended) {
                  disableSubmit('Incomplete 10');
 	     } else if (handModel.length==0) {
-		 disableSubmit('Evaluate');
+		 disableSubmit(null);
              } else {
 		 disableSubmit(handModel.length.toString() + " cards");
 	     }
@@ -194,14 +193,13 @@ $(document).ready(
 		return;
             } 
 	 }
-	 $('#handForm').panel('open');
 	 $('#evaluationscontainer').hide(500);
 	 $('#blanksection').show(500);
 
      }
 
      
-     initializeHash();
+    initializeHash();
 
     $('#handentry').submit(
       function(e) {
