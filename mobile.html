@@ -37,14 +37,11 @@
 <div class='holding ui-field-contain'><label for='handH' class='red'>&hearts;</label><input type='text' data-suit='H' id='handH' class='holding' autocomplete='off' autocapitalize='characters'/></div>
 <div class='holding ui-field-contain'><label for='handD' class='red'>&diams;</label><input type='text' data-suit='D' id='handD' class='holding' autocomplete='off' autocapitalize='characters'/></div>
 <div class='holding ui-field-contain'><label for='handC'>&clubs;</label><input type='text' data-suit='C' id='handC' class='holding' autocomplete='off' autocapitalize='characters'/></div>
-<div class='error'>&nbps;</div>
 <div class="ui-field-contain">
     <input type="submit" name="evaluate" value="Evaluate" disabled='disabled' />
-</div>
-
-<div class="ui-field-contain">
+</div><div class="ui-field-contain">
     <input type='button' name='clear' id='clear' value='Clear' tabindex='-1'/>
-</div>
+</div><div class='error'>&nbsp;</div>
 </form>
 </div> <!-- end panel --> 
 
@@ -57,8 +54,9 @@
 <div id='blanksection' class="ui-body ui-body-a ui-corner-all">
 <h1>Welcome!</h1>
 <p>This is the mobile version of the interactive bridge evaluator.</p>
+<p>To get started, click the 
 </div>
-<div id='evaluationscontainer'>
+<div id='evaluationscontainer' style='display: none;'>
 <table data-role='table' data-mode='columntoggle' id='evaluations' class='ui-responsive' data-column-btn-text='Evaluators...'>
 <thead>
 <tr><th class='key'>&nbsp;</th><th data-priority='1' id='CCCC' class='value'>CCCC</th><th data-priority='2' id='hcp' class='value'>HCP</th><th data-priority='3' id='fifths' class='value'>Fifths</th><th data-priority='4'id="bumrap" class='value'>BUM-RAP</th><th data-priority='5' id="bissell" class='value'>Bissell</th></tr>
