@@ -64,6 +64,18 @@ Bridge.Holding= function (index,short,source) {
 	return this.source.entry(this.index | holding.index);
     }
 
+    this.topRanks = function(rank) {
+	return this.source.entry((this.index>>(rank.index))<<(rank.index));
+    }
+
+    this.spots = function(rank) {
+	return this.source.entry(this.index&((1<<rank.index)-1));
+    }
+
+    this.countSpots = function(rank) {
+	return this.len() - this.topRanks(rank).len()
+    }
+
     this.addSpots = function(noOfSpots) {
         // Adds noOfSpots bottom ranks to holding if they are not in holding
         // Returns new holding, or null if one of the bottom ranks is already
@@ -78,10 +90,15 @@ Bridge.Holding= function (index,short,source) {
 }
 
 // Class representing hand shape
+
 Bridge.Shape = function(index,lengths,suits) {
     this.index = index;
     this.short = lengths.join("-");
     this.lengths = lengths;
+    var comparison = function descendingInt(l1,l2) {
+	return l2-l1;
+    }
+    this.pattern = lengths.sort(comparison).join("");
     var localThis = this;
     suits.forEach( function(suit) {
 	    localThis[suit.short] = lengths[suit.index];
@@ -279,16 +296,21 @@ Bridge.Deck = function() {
     this.suits = Bridge.standardSuits();
     this.shapes = Bridge.standardShapes(this.suits);
     this.holdings = new Bridge.AllHoldings(this.ranks);
-    this.holdingProc = function(name,func) {
-	var mapper = new Bridge.HoldingMapper(this.ranks,func);
+    this.holdingMapper = function(name,mapper) {
 	Bridge.Holding.prototype[name]=function () {
 	    if (!(name in this.cache)) {
 		this.cache[name] = mapper.evalHolding(this);
             }
             return this.cache[name];
 	}
+    }
+
+    this.holdingProc = function(name,func) {
+	var mapper = new Bridge.HoldingMapper(this.ranks,func);
+	this.holdingMapper(name,mapper)
         return mapper
     };
+
     this.shapeProc = function(name,func) {
         Bridge.Shape.prototype[name] = function() {
             return func.apply(null,this.lengths);
@@ -321,3 +343,4 @@ Bridge.Deck = function() {
 //    --> 5
 //    deck.h('-').hcp()
 //    --> 0
+
