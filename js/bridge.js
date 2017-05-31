@@ -72,6 +72,11 @@ Bridge.Holding= function (index,short,source) {
 	return this.source.entry(this.index&((1<<rank.index)-1));
     }
 
+    this.spotIndex = function(rank) {
+	var index = rank.index
+	return (this.index >> index) | (this.spots(rank).length<<(13-index));
+    }
+
     this.countSpots = function(rank) {
 	return this.len() - this.topRanks(rank).len()
     }
@@ -269,24 +274,66 @@ Bridge.getArgs = function(func) {
 
 Bridge.holdingArgMap = function(ranks,arg) {
     if (arg =='len') {
-        return 'length'
+        return 'length';
     }
     if (arg[0]=='x') {
-        arg=arg.slice(1)
+        arg=arg.slice(1);
     }
-    return arg
+    return arg;
+};
+
+Bridge.HoldingFuncArgs = function(ranks,argNames) {
+    var minRank=ranks.entry(12);
+    var hasLength = false;
+    var fArgs = argNames;
+    fArgs.forEach(
+        function(arg) {
+	    if (arg == 'length') {
+		hasLength = true;
+	    } else {
+		rank = ranks.lookup(arg);
+		if (rank.index < minRank.index) {
+		    minRank = rank;
+		}
+            }
+		    
+	}
+    );
+    if (hasLength) {
+	this.indexLength = 1<<(13-minRank.index);
+        this.cacheIndex = function(holding) {
+    	    return holding.spotIndex(minRank);
+        };
+    } else {
+	this.indexLength = minRank.index << (13-minRank.index)
+        this.cacheIndex = function(holding) {
+    	    return holding.index>>minRank.index;
+        };
+    }
+
+    this.mapArguments = function(holding) {
+	return fArgs.map(
+            function(arg) {
+		return holding[arg];
+	    }
+        );
+    };
 }
 
-Bridge.HoldingMapper = function(ranks,func) {
-    this.func = func
-    var args = Bridge.getArgs(func)
-    this.argMapper = args.map(function(arg) { return Bridge.holdingArgMap(ranks,arg)})
-
+Bridge.HoldingFunction = function(ranks,func) {
+    var rawFunction = func
+    var funcArgs = (function() {
+	var args = Bridge.getArgs(func);
+	var argsMapped = args.map(function(arg) { return Bridge.holdingArgMap(ranks,arg)});
+	return new Bridge.HoldingFuncArgs(ranks,argsMapped);
+	})()
+    var cache = new Array(funcArgs.indexLength);
     this.evalHolding = function(h) {
-        mapped = this.argMapper.map(function(m) {
-		return h[m]
-	    })
-        return this.func.apply(null,mapped)
+	var index = funcArgs.cacheIndex(h);
+	if (cache[index]==null) {
+	    cache[index]=rawFunction.apply(null,funcArgs.mapArguments(h));
+	}
+	return cache[index];
     }
 }
 
@@ -298,15 +345,12 @@ Bridge.Deck = function() {
     this.holdings = new Bridge.AllHoldings(this.ranks);
     this.holdingMapper = function(name,mapper) {
 	Bridge.Holding.prototype[name]=function () {
-	    if (!(name in this.cache)) {
-		this.cache[name] = mapper.evalHolding(this);
-            }
-            return this.cache[name];
+	    return mapper.evalHolding(this);
 	}
     }
 
     this.holdingProc = function(name,func) {
-	var mapper = new Bridge.HoldingMapper(this.ranks,func);
+	var mapper = new Bridge.HoldingFunction(this.ranks,func);
 	this.holdingMapper(name,mapper)
         return mapper
     };
@@ -322,6 +366,10 @@ Bridge.Deck = function() {
         return this.shapes.lookup(key);
     }
 
+    this.pattern = function(lengths) {
+	return this.shape(lengths).pattern
+    }
+
     this.h = function (hVal) {
 	var holding;
 	if (typeof(hVal)=='string') {
@@ -334,6 +382,7 @@ Bridge.Deck = function() {
 	    
 	return holding;
     };
+
 };
 
 // Example:
