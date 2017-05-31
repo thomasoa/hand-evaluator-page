@@ -112,10 +112,6 @@ function CCCCHolding(len,A,K,Q,J,T,x9,x8) {
     return eval*1.0/100.0;
 }
 
-function HCPHolding(A,K,Q,J) {
-    return A*4+K*3+Q*2+J;
-}
-
 function Bissell(A,K,Q,J,T,len) {
     var pts=0;
     var honors=A+K+Q+J+T;
