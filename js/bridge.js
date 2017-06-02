@@ -72,6 +72,10 @@ Bridge.Holding= function (index,short,source) {
 	return this.source.entry(this.index&((1<<rank.index)-1));
     }
 
+    this.spotX = function(rank) {
+	return this.topRanks(rank).short + ('X'.repeat(this.spots(rank).length))
+    }
+
     this.spotIndex = function(rank) {
 	var index = rank.index
 	return (this.index >> index) | (this.spots(rank).length<<(13-index));

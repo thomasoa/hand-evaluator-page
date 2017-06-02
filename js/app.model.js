@@ -132,7 +132,9 @@ function AppModel() {
 	new Evaluator('hcp',{}),
 	new Evaluator('fifths',{digits:1}),
 	new Evaluator('bumrap',{digits:2}),
-	new Evaluator('bissell',{})
+	new Evaluator('bissell',{}),
+	new Evaluator('binkyNT',{digits:2}),
+	new Evaluator('binkySuit',{digits:2})
     ];
 
     this.evaluate = function() {

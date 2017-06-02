@@ -26,6 +26,7 @@
 </script>
 <script type="text/javascript" src="js/bridge.js"></script>
 <script type="text/javascript" src="js/evaluators.js"></script>
+<script type="text/javascript" src="js/binky.js"></script>
 <script type="text/javascript" src="js/app.model.js"></script>
 <script type="text/javascript" src="js/app.mobile.js"></script>
 <body>
@@ -59,13 +60,22 @@
 <div id='evaluationscontainer' style='display: none;'>
 <table data-role='table' data-mode='columntoggle' id='evaluations' class='ui-responsive' data-column-btn-text='Evaluators...'>
 <thead>
-<tr><th class='key'>&nbsp;</th><th data-priority='1' id='CCCC' class='value'>CCCC</th><th data-priority='2' id='hcp' class='value'>HCP</th><th data-priority='3' id='fifths' class='value'>Fifths</th><th data-priority='4'id="bumrap" class='value'>BUM-RAP</th><th data-priority='5' id="bissell" class='value'>Bissell</th></tr>
+<tr><th class='key'>&nbsp;</th>
+<th data-priority='1' id='CCCC' class='value'>CCCC</th>
+<th data-priority='2' id='hcp' class='value'>HCP</th>
+<th data-priority='3' id='binkyNT' class='value'>Binky NT</th>
+<th data-priority='4' id='binkySuit' class='value'>Binky Suit</th>
+<th data-priority='5' id='fifths' class='value'>Fifths</th>
+<th data-priority='6'id="bumrap" class='value'>BUM-RAP</th>
+<th data-priority='7' id="bissell" class='value'>Bissell</th></tr>
 </thead>
 <tbody>
 <tr class='total'>
     <td class='key'>Total</td>
     <td class='cccc'>&nbsp;</td>
     <td class='hcp'>&nbsp;</td>
+    <td class='binkyNT'>&nbsp;</td>
+    <td class='binkySuit'>&nbsp;</td>
     <td class='fifths'>&nbsp;</td>
     <td class='bumrap'>&nbsp;</td>
     <td class='bissell'>&nbsp;</td>
@@ -74,6 +84,8 @@
     <td class='key'>4-4-3-2</td>
     <td class='cccc'>&nbsp;</td>
     <td class='hcp'>&nbsp;</td>
+    <td class='binkyNT'>&nbsp;</td>
+    <td class='binkySuit'>&nbsp;</td>
     <td class='fifths'>&nbsp;</td>
     <td class='bumrap'>&nbsp;</td>
     <td class='bissell'>&nbsp;</td>
@@ -82,6 +94,8 @@
     <td class='key'>&spades; <span class='holding'>&nbsp;</span></td>
     <td class='cccc'>&nbsp;</td>
     <td class='hcp'>&nbsp;</td>
+    <td class='binkyNT'>&nbsp;</td>
+    <td class='binkySuit'>&nbsp;</td>
     <td class='fifths'>&nbsp;</td>
     <td class='bumrap'>&nbsp;</td>
     <td class='bissell'>&nbsp;</td>
@@ -90,6 +104,8 @@
     <td class='key'><span class='red'>&hearts;</span> <span class='holding'>&nbsp;</span></td>
     <td class='cccc'>&nbsp;</td>
     <td class='hcp'>&nbsp;</td>
+    <td class='binkyNT'>&nbsp;</td>
+    <td class='binkySuit'>&nbsp;</td>
     <td class='fifths'>&nbsp;</td>
     <td class='bumrap'>&nbsp;</td>
     <td class='bissell'>&nbsp;</td>
@@ -98,6 +114,8 @@
     <td class='key'><span class='red'>&diams;</span> <span class='holding'>&nbsp;</span></td>
     <td class='cccc'>&nbsp;</td>
     <td class='hcp'>&nbsp;</td>
+    <td class='binkyNT'>&nbsp;</td>
+    <td class='binkySuit'>&nbsp;</td>
     <td class='fifths'>&nbsp;</td>
     <td class='bumrap'>&nbsp;</td>
     <td class='bissell'>&nbsp;</td>
@@ -106,6 +124,8 @@
     <td class='key'>&clubs; <span class='holding'>&nbsp;</span></td>
     <td class='cccc'>&nbsp;</td>
     <td class='hcp'>&nbsp;</td>
+    <td class='binkyNT'>&nbsp;</td>
+    <td class='binkySuit'>&nbsp;</td>
     <td class='fifths'>&nbsp;</td>
     <td class='bumrap'>&nbsp;</td>
     <td class='bissell'>&nbsp;</td>
