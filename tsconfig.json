@@ -1,0 +1,18 @@
+{
+    "includes": ["src/**/*"],
+    "exclude": ["tests/**/*"],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "lib":["es2022"],
+        "outDir":"dest",
+        "rootDir":"src",
+        "module": "es2022",
+        "moduleResolution":"nodenext",
+        "experimentalDecorators": true
+    },
+    "allowJs":true,
+    "checkJs":true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strict": true
+}
