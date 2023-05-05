@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc && npm run build:copy",
+    "clean": "rm -rf dest; mkdir dest",
     "build:copy": "(cd public; tar cf - .) | (cd dest; tar xf -)"
 
   },
