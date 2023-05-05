@@ -4,7 +4,10 @@
   "description": "JavaScript hand evaluation tool",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc && npm run build:copy",
+    "build:copy": "(cd public; tar cf - .) | (cd dest; tar xf -)"
+
   },
   "repository": {
     "type": "git",
